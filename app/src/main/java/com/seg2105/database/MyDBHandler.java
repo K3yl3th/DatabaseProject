@@ -1,6 +1,8 @@
 package com.seg2105.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -32,13 +34,37 @@ public class MyDBHandler extends SQLiteOpenHelper {
     }
 
     public void addProduct(Product product){
-        //TODO
-        throw new Error("Not yet implemented");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCTNAME, product.getProductName());
+        values.put(COLUMN_SKU, product.getSku());
+
+        db.insert(TABLE_PRODUCTS, null, values);
+
+        db.close();
     }
 
     public Product findProduct(String productname){
-        //TODO
-        throw new Error("Not yet implemented");
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "Select * FROM " + TABLE_PRODUCTS + " WHERE " +
+                COLUMN_PRODUCTNAME + " =\"" + productname + "\"";
+
+        Cursor cursor = db.rawQuery(query, null);
+        Product product = new Product();
+
+        if (cursor.moveToFirst()) {
+
+            product.setID(Integer.parseInt(cursor.getString(0)));
+            product.setProductName(cursor.getString(1));
+            product.setSku(Integer.parseInt(cursor.getString(2)));
+            cursor.close();
+        } else {
+          product = null;
+        }
+        db.close();
+        return product;
     }
 
     public boolean deleteProduct(String productname){

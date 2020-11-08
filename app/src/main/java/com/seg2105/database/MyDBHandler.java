@@ -33,6 +33,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+
     public void addProduct(Product product){
         SQLiteDatabase db = this.getWritableDatabase();
 
